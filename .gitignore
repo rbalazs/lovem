@@ -28,6 +28,10 @@
 !bin/symfony_requirements
 /vendor/
 
+.data
+
+logs
+
 # Assets and user uploads
 /web/bundles/
 /web/uploads/

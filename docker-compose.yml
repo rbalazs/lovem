@@ -1,14 +1,29 @@
-nginx:
-  build: docker/nginx
-  ports:
-    - "8080:80"
-  links:
-    - php
-  volumes:
-    - ./:/app
-
-php:
-  image: php:7.0-fpm
-  volumes:
-    - ./:/app
-  working_dir: /app
+version: '2'
+services:
+    db:
+        image: mysql
+        ports:
+            - 3306:3306
+        volumes:
+            - "./.data/db:/var/lib/mysql"
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+    php:
+        build: docker/php
+        ports:
+            - 9000:9000
+        links:
+            - db:mysqldb
+        volumes:
+            - .:/var/www/symfony
+            - ./logs/symfony:/var/www/symfony/app/logs
+    nginx:
+        build: docker/nginx
+        ports:
+            - 80:80
+        links:
+            - php
+        volumes_from:
+            - php
+        volumes:
+            - ./logs/nginx/:/var/log/nginx
